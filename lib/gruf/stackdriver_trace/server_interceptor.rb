@@ -26,7 +26,7 @@ module Gruf
         trace = create_trace(request)
         begin
           Google::Cloud::Trace.set(trace)
-          Google::Cloud::Trace.in_span("grpc-request") do |span|
+          Google::Cloud::Trace.in_span("grpc-request-received") do |span|
             configure_span(span, request)
             yield
           end
