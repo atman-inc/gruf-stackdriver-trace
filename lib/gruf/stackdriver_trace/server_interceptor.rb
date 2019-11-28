@@ -6,7 +6,7 @@ module Gruf
   module StackdriverTrace
     class ServerInterceptor
       def initialize(service: nil, **kwargs)
-        load_config kwargs
+        load_config(kwargs)
 
         if service
           @service = service
@@ -25,8 +25,8 @@ module Gruf
       def call
         trace = create_trace(request)
         begin
-          Google::Cloud::Trace.set trace
-          Google::Cloud::Trace.in_span "grpc-request" do |span|
+          Google::Cloud::Trace.set(trace)
+          Google::Cloud::Trace.in_span("grpc-request") do |span|
             configure_span(span, request)
             yield
           end
@@ -72,7 +72,7 @@ module Gruf
 
       def set_basic_labels(labels, request)
         set_label(labels, Google::Cloud::Trace::LabelKey::AGENT, AGENT_NAME)
-        set_label(labels, Google::Cloud::Trace::LabelKey::HTTP_HOST, Gruf.server_binding_url)
+        set_label(labels, Google::Cloud::Trace::LabelKey::HTTP_HOST, Socket.gethostname)
         set_label(labels, Google::Cloud::Trace::LabelKey::HTTP_CLIENT_PROTOCOL, 'http2')
         set_label(labels, Google::Cloud::Trace::LabelKey::HTTP_USER_AGENT, get_ua(request))
         set_label(labels, Google::Cloud::Trace::LabelKey::HTTP_URL, get_path(request))
