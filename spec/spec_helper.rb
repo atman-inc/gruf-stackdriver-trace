@@ -1,5 +1,5 @@
 require "bundler/setup"
-require "gruf/stackdriver/trace"
+require "gruf/stackdriver_trace"
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure

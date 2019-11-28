@@ -1,11 +1,11 @@
 
 lib = File.expand_path("../lib", __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require "gruf/stackdriver/trace/version"
+require "gruf/stackdriver_trace/version"
 
 Gem::Specification.new do |spec|
   spec.name          = "gruf-stackdriver-trace"
-  spec.version       = Gruf::Stackdriver::Trace::VERSION
+  spec.version       = Gruf::StackdriverTrace::VERSION
   spec.authors       = ["Kei Takahashi"]
   spec.email         = ["dameleon@gmail.com"]
 

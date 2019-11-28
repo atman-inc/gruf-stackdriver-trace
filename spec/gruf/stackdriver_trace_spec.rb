@@ -1,6 +1,6 @@
-RSpec.describe Gruf::Stackdriver::Trace do
+RSpec.describe Gruf::StackdriverTrace do
   it "has a version number" do
-    expect(Gruf::Stackdriver::Trace::VERSION).not_to be nil
+    expect(Gruf::StackdriverTrace::VERSION).not_to be nil
   end
 
   it "does something useful" do
