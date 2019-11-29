@@ -1,3 +1,5 @@
+require "google/cloud/trace"
+
 module Gruf
   module StackdriverTrace
     class ClientInterceptor

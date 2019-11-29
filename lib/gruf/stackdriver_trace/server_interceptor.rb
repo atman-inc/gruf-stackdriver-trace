@@ -40,10 +40,11 @@ module Gruf
 
       def create_trace(request)
         trace_context = get_trace_context(request)
-        Google::Cloud::Trace::TraceRecord.new \
-            @service.project,
-            trace_context,
-            span_id_generator: configuration.span_id_generator
+        Google::Cloud::Trace::TraceRecord.new(
+          @service.project,
+          trace_context,
+          span_id_generator: configuration.span_id_generator
+        )
       end
 
       def get_trace_context(request)
@@ -54,11 +55,12 @@ module Gruf
           sampler = configuration.sampler ||
             Google::Cloud::Trace::TimeSampler.default
           sampled = sampler.call(simulated_rack_env(request))
-          tc = Stackdriver::Core::TraceContext.new \
-                trace_id: tc.trace_id,
-                span_id: tc.span_id,
-                sampled: sampled,
-                capture_stack: sampled && configuration.capture_stack
+          tc = Stackdriver::Core::TraceContext.new(
+            trace_id: tc.trace_id,
+            span_id: tc.span_id,
+            sampled: sampled,
+            capture_stack: sampled && configuration.capture_stack
+          )
         end
         tc
       end
@@ -152,7 +154,7 @@ module Gruf
         request.active_call.metadata['user-agent'] || nil
       end
 
-      def set_label labels, key, value
+      def set_label(labels, key, value)
         labels[key] = value if value.is_a? ::String
       end
 
