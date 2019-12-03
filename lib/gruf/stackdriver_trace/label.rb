@@ -26,7 +26,10 @@ module Gruf
       end
 
       def get_ua(request)
-        request.active_call.metadata['user-agent'] || nil
+        metadata =
+          request.is_a?(Gruf::Outbound::RequestContext) ?
+            request.metadata : request.active_call.metadata
+        metadata['user-agent'] || nil
       end
     end
   end
