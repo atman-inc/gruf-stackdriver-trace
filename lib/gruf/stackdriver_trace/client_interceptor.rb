@@ -14,6 +14,7 @@ module Gruf
             yield request_context
           end
           add_response_labels(span.labels, result)
+          raise result.message unless result.successful?
           result.message
         end
       end

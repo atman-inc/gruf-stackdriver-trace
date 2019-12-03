@@ -20,6 +20,7 @@ module Gruf
                 span.labels,
                 result.successful? ? ::GRPC::Core::StatusCodes::OK : result.message.code
             )
+            raise result.message unless result.successful?
             result.message
           end
         ensure
@@ -134,12 +135,6 @@ module Gruf
           'SCRIPT_NAME' => request.service.service_name,
           'PATH_INFO' => "/#{request.method_key.to_s.camelize}"
         }
-      end
-
-      def get_path(request)
-        path = "#{request.service_key}#{request.method_key}"
-        path = "/#{path}" unless path.start_with? "/"
-        path
       end
 
       def service
