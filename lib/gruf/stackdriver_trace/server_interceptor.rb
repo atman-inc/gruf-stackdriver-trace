@@ -42,16 +42,17 @@ module Gruf
       end
 
       def get_trace_context(request)
+        env = simulated_rack_env(request)
+        sampler = configuration.sampler ||
+            Google::Cloud::Trace::TimeSampler.default
         header = request.active_call.metadata[Gruf::StackdriverTrace::HEADER_KEY]
         return Stackdriver::Core::TraceContext.new(
-            sampled: Gruf::StackdriverTrace.config[:sampled],
+            sampled: Gruf::StackdriverTrace.config[:sampled] && sampler.call(env),
             capture_stack: Gruf::StackdriverTrace.config[:capture_stack]
         ) unless header
         tc = Stackdriver::Core::TraceContext.parse_string(header)
         if tc.sampled?.nil?
-          sampler = configuration.sampler ||
-            Google::Cloud::Trace::TimeSampler.default
-          sampled = sampler.call(simulated_rack_env(request))
+          sampled = sampler.call(env)
           tc = Stackdriver::Core::TraceContext.new(
             trace_id: tc.trace_id,
             span_id: tc.span_id,
