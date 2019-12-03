@@ -57,7 +57,7 @@ module Gruf
 
       def configure_span(span, request)
         method_name = [
-            request.service.name,
+            request.service.service_name,
             request.method_key.to_s.camelize
         ].join('/')
         span.name = "Recv: #{method_name}"
