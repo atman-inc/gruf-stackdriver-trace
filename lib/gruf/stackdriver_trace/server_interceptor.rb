@@ -31,7 +31,8 @@ module Gruf
       def get_trace_context(request)
         header = request.active_call.metadata[Gruf::StackdriverTrace::HEADER_KEY]
         return Stackdriver::Core::TraceContext.new(
-            sampled: Gruf::StackdriverTrace.config[:sampled]
+            sampled: Gruf::StackdriverTrace.config[:sampled],
+            capture_stack: Gruf::StackdriverTrace.config[:capture_stack]
         ) unless header
         tc = Stackdriver::Core::TraceContext.parse_string(header)
         if tc.sampled?.nil?
