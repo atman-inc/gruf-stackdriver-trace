@@ -32,7 +32,7 @@ module Gruf
 
       def get_host(request)
         call = request_context?(request) ? request.call : request.active_call
-        call.peer
+        call.try(:peer)
       end
 
       def request_context?(request)
