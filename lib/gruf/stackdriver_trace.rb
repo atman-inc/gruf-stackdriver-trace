@@ -40,8 +40,8 @@ module Gruf
     end
 
     def self.init_default_config
-      configuration.project_id ||= Trace.default_project_id
-      configuration.credentials ||= Cloud.configure.credentials
+      configuration.project_id ||= Google::Cloud::Trace.default_project_id
+      configuration.credentials ||= Google::Cloud.configure.credentials
       configuration.capture_stack = config.fetch(:capture_stack, false)
       configuration.sampler = config.fetch(:sampler, nil)
       configuration.span_id_generator = config.fetch(:span_id_generator, nil)

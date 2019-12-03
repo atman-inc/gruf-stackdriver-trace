@@ -112,7 +112,7 @@ module Gruf
         if @error_callback.nil?
           @error_callback = :unset
           configuration_callback = configuration.on_error
-          configuration_callback ||= Cloud.configure.on_error
+          configuration_callback ||= Google::Cloud.configure.on_error
           @error_callback = configuration_callback if configuration_callback
         end
 
