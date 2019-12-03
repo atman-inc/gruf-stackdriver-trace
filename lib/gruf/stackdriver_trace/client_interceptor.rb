@@ -1,3 +1,5 @@
+require 'grpc'
+require 'gruf'
 require "google/cloud/trace"
 
 module Gruf
@@ -24,7 +26,7 @@ module Gruf
       end
 
       def add_response_labels(labels, result)
-        code = result.successful? ? GPRC::Core::StatusCodes::OK : result.message.code
+        code = result.successful? ? ::GPRC::Core::StatusCodes::OK : result.message.code
         set_label(labels, Google::Cloud::Trace::LabelKey::RPC_STATUS_CODE, code.to_s)
       end
 
