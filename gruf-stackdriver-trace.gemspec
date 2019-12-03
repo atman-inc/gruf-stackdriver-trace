@@ -22,7 +22,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "bundler", "~> 2"
   spec.add_development_dependency "rake", "~> 10.0"
   spec.add_development_dependency "rspec", "~> 3.0"
-  spec.add_dependency "gruf", "~> 2.7"
+  spec.add_dependency "gruf", "~> 2.5"
   spec.add_dependency "grpc", "~> 1.24"
   spec.add_dependency "stackdriver-core", "~> 1.3"
   spec.add_dependency "google-cloud-env", "~> 1.3"
