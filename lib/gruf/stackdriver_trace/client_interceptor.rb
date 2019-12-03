@@ -11,6 +11,8 @@ module Gruf
           add_response_labels(span.labels, response)
           response
         end
+      rescue => e
+        p e
       end
 
       private
