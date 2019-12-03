@@ -1,7 +1,3 @@
-require 'grpc'
-require 'gruf'
-require "google/cloud/trace"
-
 module Gruf
   module StackdriverTrace
     class ClientInterceptor < Gruf::Interceptors::ClientInterceptor

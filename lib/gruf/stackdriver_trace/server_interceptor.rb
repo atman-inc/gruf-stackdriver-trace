@@ -1,6 +1,3 @@
-require 'google/cloud/trace'
-require "stackdriver/core/trace_context"
-
 module Gruf
   module StackdriverTrace
     class ServerInterceptor < Gruf::Interceptors::ServerInterceptor

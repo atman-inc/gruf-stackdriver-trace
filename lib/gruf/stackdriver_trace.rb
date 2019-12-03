@@ -1,7 +1,9 @@
+require 'grpc'
 require 'gruf'
 require "google/cloud/env"
-require 'google/cloud/trace'
+require "google/cloud/trace"
 require "google/cloud/trace/async_reporter"
+require "stackdriver/core/trace_context"
 require_relative "stackdriver_trace/client_interceptor"
 require_relative "stackdriver_trace/server_interceptor"
 require_relative "stackdriver_trace/version"
