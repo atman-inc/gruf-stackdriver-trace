@@ -145,6 +145,10 @@ module Gruf
       def service
         @service ||= Gruf::StackdriverTrace.service
       end
+
+      def configuration
+        @configuration ||= Gruf::StackdriverTrace.configuration
+      end
     end
   end
 end
