@@ -1,6 +1,10 @@
+require_relative 'label'
+
 module Gruf
   module StackdriverTrace
     class ClientInterceptor < Gruf::Interceptors::ClientInterceptor
+      include Gruf::StackdriverTrace::Label
+
       def call(request_context:)
         Google::Cloud::Trace.in_span("grpc-request") do |span|
           return yield request_context unless span
@@ -12,8 +16,6 @@ module Gruf
           add_response_labels(span.labels, result)
           result.message
         end
-      rescue => e
-        p e
       end
 
       private
@@ -23,16 +25,12 @@ module Gruf
       end
 
       def add_request_labels(labels, request_context)
-        set_label(labels, Google::Cloud::Trace::LabelKey::RPC_REQUEST_TYPE, request_context.type.to_s)
+        set_label(labels, label_key::RPC_REQUEST_TYPE, request_context.type.to_s)
       end
 
       def add_response_labels(labels, result)
         code = result.successful? ? ::GRPC::Core::StatusCodes::OK : result.message.code
-        set_label(labels, Google::Cloud::Trace::LabelKey::RPC_STATUS_CODE, code.to_s)
-      end
-
-      def set_label labels, key, value
-        labels[key] = value if value.is_a? ::String
+        set_label(labels, label_key::RPC_STATUS_CODE, code.to_s)
       end
     end
   end

@@ -1,6 +1,10 @@
+require_relative 'label'
+
 module Gruf
   module StackdriverTrace
     class ServerInterceptor < Gruf::Interceptors::ServerInterceptor
+      include Gruf::StackdriverTrace::Label
+
       def call
         return yield if service.nil?
 
@@ -57,29 +61,29 @@ module Gruf
       end
 
       def set_basic_labels(labels, request)
-        set_label(labels, Google::Cloud::Trace::LabelKey::AGENT, AGENT_NAME)
-        set_label(labels, Google::Cloud::Trace::LabelKey::HTTP_HOST, Socket.gethostname)
-        set_label(labels, Google::Cloud::Trace::LabelKey::HTTP_CLIENT_PROTOCOL, 'http2')
-        set_label(labels, Google::Cloud::Trace::LabelKey::HTTP_USER_AGENT, get_ua(request))
-        set_label(labels, Google::Cloud::Trace::LabelKey::HTTP_URL, get_path(request))
-        set_label(labels, Google::Cloud::Trace::LabelKey::PID, ::Process.pid.to_s)
-        set_label(labels, Google::Cloud::Trace::LabelKey::TID, ::Thread.current.object_id.to_s)
+        set_label(labels, label_key::AGENT, Gruf::StackdriverTrace::AGENT_NAME)
+        set_label(labels, label_key::HTTP_HOST, Socket.gethostname)
+        set_label(labels, label_key::HTTP_CLIENT_PROTOCOL, 'http2')
+        set_label(labels, label_key::HTTP_USER_AGENT, get_ua(request))
+        set_label(labels, label_key::HTTP_URL, get_path(request))
+        set_label(labels, label_key::PID, ::Process.pid.to_s)
+        set_label(labels, label_key::TID, ::Thread.current.object_id.to_s)
       end
 
       def set_extended_labels(labels, capture_stack)
         if capture_stack
-          Google::Cloud::Trace::LabelKey.set_stack_trace(labels, skip_frames: 3)
+          label_key.set_stack_trace(labels, skip_frames: 3)
         end
         if Google::Cloud.env.app_engine?
           set_label(
             labels,
-            Google::Cloud::Trace::LabelKey::GAE_APP_MODULE,
+            label_key::GAE_APP_MODULE,
             Google::Cloud.env.app_engine_service_id
           )
           set_label(
             labels,
-             Google::Cloud::Trace::LabelKey::GAE_APP_MODULE_VERSION,
-             Google::Cloud.env.app_engine_service_version
+            label_key::GAE_APP_MODULE_VERSION,
+            Google::Cloud.env.app_engine_service_version
           )
         end
         # TODO: set GKE env options
@@ -136,10 +140,6 @@ module Gruf
 
       def get_ua(request)
         request.active_call.metadata['user-agent'] || nil
-      end
-
-      def set_label(labels, key, value)
-        labels[key] = value if value.is_a? ::String
       end
 
       def service
