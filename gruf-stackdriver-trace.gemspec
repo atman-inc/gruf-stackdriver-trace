@@ -9,7 +9,7 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Kei Takahashi"]
   spec.email         = ["dameleon@gmail.com"]
 
-  spec.summary       = %q{Gruf🤝Stackdriver trace}
+  spec.summary       = %q{Stackdriver trace for gruf}
   spec.description   = %q{Plugin for Stackdirver trace for bigcommerce/gruf}
   spec.homepage      = "https://github.com/atman-inc/gruf-stackdriver-trace"
   spec.license       = "MIT"
@@ -27,5 +27,5 @@ Gem::Specification.new do |spec|
   spec.add_dependency "stackdriver-core", "~> 1.3"
   spec.add_dependency "google-cloud-env", "~> 1.3"
   spec.add_dependency "google-cloud-trace", "~> 0.35"
-  spec.add_runtime_dependency "activesupport", "> 4"
+  spec.add_dependency "activesupport", "> 4"
 end
