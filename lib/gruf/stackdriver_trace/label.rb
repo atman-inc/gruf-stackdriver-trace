@@ -31,8 +31,12 @@ module Gruf
       end
 
       def get_host(request)
-        call = request_context?(request) ? request.call : request.active_call
-        call.try(:peer)
+        if request_context?(request)
+          # get request host from GRPC::ActiveCall::InterceptableView
+          request.call.instance_variable_get(:@wrapped).try(:peer)
+        else
+          request.active_call.peer
+        end
       end
 
       def request_context?(request)
