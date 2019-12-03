@@ -14,7 +14,7 @@ module Gruf
           Google::Cloud::Trace.in_span("grpc-request-received") do |span|
             configure_span(span, request)
             result = Gruf::Interceptors::Timer.time do
-              yield request_context
+              yield
             end
             set_grpc_status_code(
                 span.labels,
