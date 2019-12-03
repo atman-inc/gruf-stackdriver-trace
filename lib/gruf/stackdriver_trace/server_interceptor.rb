@@ -132,7 +132,7 @@ module Gruf
         #   SCRIPT_NAME => 'grpc.health.v1',
         #   PATH_INFO => '/Check'
         # be passed 'grpc.health.v1/Check' to blacklist checking
-        @simulated_rack_env ||= {
+        {
           'SCRIPT_NAME' => request.service.service_name,
           'PATH_INFO' => "/#{request.method_key.to_s.camelize}"
         }
