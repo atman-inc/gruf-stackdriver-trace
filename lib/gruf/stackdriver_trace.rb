@@ -18,6 +18,7 @@ module Gruf
     def self.config
       @config ||= {
           service: nil,
+          sampled: true,
           capture_stack: nil,
           sampler: nil,
           span_id_generator: nil
