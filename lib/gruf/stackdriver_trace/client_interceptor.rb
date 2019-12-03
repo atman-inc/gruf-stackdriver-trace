@@ -5,9 +5,9 @@ module Gruf
     class ClientInterceptor < Gruf::Interceptors::ClientInterceptor
       def call(request_context:)
         Google::Cloud::Trace.in_span("grpc-request") do |span|
-          return yield unless span
+          return yield request_context unless span
           add_request_labels(span.labels, request_context)
-          response = yield
+          response = yield request_context
           add_response_labels(span.labels, response)
           response
         end
