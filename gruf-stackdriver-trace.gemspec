@@ -26,5 +26,5 @@ Gem::Specification.new do |spec|
   spec.add_dependency "grpc", "~> 1.24"
   spec.add_dependency "stackdriver-core", "~> 1.3"
   spec.add_dependency "google-cloud-env", "~> 1.3"
-  spec.add_dependency "google-cloud-trace", "~> 0.36"
+  spec.add_dependency "google-cloud-trace", "~> 0.35"
 end
