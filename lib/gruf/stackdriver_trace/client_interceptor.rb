@@ -9,7 +9,7 @@ module Gruf
         Google::Cloud::Trace.in_span("grpc-request") do |span|
           return yield request_context unless span
           set_request_metadata(request_context.metadata, span)
-          configure_span(span, request, request_context)
+          configure_span(span, request_context)
           result = Gruf::Interceptors::Timer.time do
             yield request_context
           end
@@ -26,10 +26,10 @@ module Gruf
         metadata[Gruf::StackdriverTrace::HEADER_KEY] = span.trace.trace_context.to_s
       end
 
-      def configure_span(span, request, request_context)
-        span.name = "Sent.#{request.method_name}"
+      def configure_span(span, request_context)
+        span.name = "Sent.#{request_context.method_name}"
         set_stack_trace(span, 4)
-        set_basic_labels(span.labels, request)
+        set_basic_labels(span.labels, request_context)
         set_label(span.labels, label_key::RPC_REQUEST_TYPE, request_context.type.to_s)
         span
       end
