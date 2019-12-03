@@ -7,9 +7,11 @@ module Gruf
         Google::Cloud::Trace.in_span("grpc-request") do |span|
           return yield request_context unless span
           add_request_labels(span.labels, request_context)
-          response = yield request_context
-          add_response_labels(span.labels, response)
-          response
+          result = Gruf::Interceptors::Timer.time do
+            yield request_context
+          end
+          add_response_labels(span.labels, result)
+          result.message
         end
       rescue => e
         p e
@@ -21,8 +23,8 @@ module Gruf
         set_label(labels, Google::Cloud::Trace::LabelKey::RPC_REQUEST_TYPE, request_context.type.to_s)
       end
 
-      def add_response_labels(labels, response)
-        code = response.successful? ? GPRC::Core::StatusCodes::OK : response.code
+      def add_response_labels(labels, result)
+        code = result.successful? ? GPRC::Core::StatusCodes::OK : result.message.code
         set_label(labels, Google::Cloud::Trace::LabelKey::RPC_STATUS_CODE, code.to_s)
       end
 
