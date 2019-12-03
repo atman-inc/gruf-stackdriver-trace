@@ -8,6 +8,7 @@ module Gruf
       def call(request_context:)
         Google::Cloud::Trace.in_span("grpc-request") do |span|
           return yield request_context unless span
+          set_request_metadata(request_context.metadata, span)
           add_request_labels(span.labels, request_context)
           result = Gruf::Interceptors::Timer.time do
             yield request_context
@@ -20,6 +21,10 @@ module Gruf
       end
 
       private
+
+      def set_request_metadata(metadata, span)
+        metadata[Gruf::StackdriverTrace::HEADER_KEY] = span.trace.trace_context.to_s
+      end
 
       def add_request_labels(labels, request_context)
         set_label(labels, Google::Cloud::Trace::LabelKey::RPC_REQUEST_TYPE, request_context.type.to_s)
