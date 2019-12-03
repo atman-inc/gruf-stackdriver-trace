@@ -42,17 +42,16 @@ module Gruf
       end
 
       def get_trace_context(request)
-        env = simulated_rack_env(request)
-        sampler = configuration.sampler ||
-            Google::Cloud::Trace::TimeSampler.default
+        rack_env = simulated_rack_env(request)
+        sampler = configuration.sampler || Google::Cloud::Trace::TimeSampler.default
         header = request.active_call.metadata[Gruf::StackdriverTrace::HEADER_KEY]
         return Stackdriver::Core::TraceContext.new(
-            sampled: Gruf::StackdriverTrace.config[:sampled] && sampler.call(env),
+            sampled: Gruf::StackdriverTrace.config[:sampled] && sampler.call(rack_env),
             capture_stack: Gruf::StackdriverTrace.config[:capture_stack]
         ) unless header
         tc = Stackdriver::Core::TraceContext.parse_string(header)
         if tc.sampled?.nil?
-          sampled = sampler.call(env)
+          sampled = sampler.call(rack_env)
           tc = Stackdriver::Core::TraceContext.new(
             trace_id: tc.trace_id,
             span_id: tc.span_id,
@@ -127,10 +126,15 @@ module Gruf
       end
 
       def simulated_rack_env(request)
-        # simulate rack env with Gruf's request
+        # REF: https://github.com/googleapis/google-cloud-ruby/blob/2ad4e22280dc8a2e61613251461e8049129deb4b/google-cloud-trace/lib/google/cloud/trace/time_sampler.rb#L98-L102
+        # simulate rack env with Gruf's request for dependencies compatibility(ex. TimeSampler#call)
+        # for example
+        #   SCRIPT_NAME => 'grpc.health.v1',
+        #   PATH_INFO => '/Check'
+        # be passed 'grpc.health.v1/Check' to blacklist checking
         @simulated_rack_env ||= {
-          'SCRIPT_NAME' => request.service_key,
-          'PATH_INFO' => request.method_key
+          'SCRIPT_NAME' => request.service.service_name,
+          'PATH_INFO' => "/#{request.method_key.to_s.camelize}"
         }
       end
 
