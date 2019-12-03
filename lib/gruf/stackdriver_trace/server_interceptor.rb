@@ -26,8 +26,6 @@ module Gruf
           Google::Cloud::Trace.set(nil)
           send_trace(trace)
         end
-      rescue => e
-        p e
       end
 
       private
