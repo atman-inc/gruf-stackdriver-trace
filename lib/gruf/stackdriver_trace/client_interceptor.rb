@@ -37,7 +37,7 @@ module Gruf
 
       def add_response_labels(labels, result)
         code = result.successful? ? ::GRPC::Core::StatusCodes::OK : result.message.code
-        set_label(labels, label_key::RPC_STATUS_CODE, code.to_s)
+        set_grpc_status_code(labels, code)
       end
     end
   end

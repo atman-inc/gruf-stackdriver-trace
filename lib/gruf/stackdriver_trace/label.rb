@@ -1,6 +1,13 @@
 module Gruf
   module StackdriverTrace
     module Label
+      def status_code_to_label(code)
+        @lookup ||= Hash[GRPC::Core::StatusCodes.constants.map do |c|
+          [GRPC::Core::StatusCodes.const_get(c), c.to_s]
+        end]
+        @lookup[code]
+      end
+
       def label_key
         Google::Cloud::Trace::LabelKey
       end
@@ -23,6 +30,10 @@ module Gruf
         tc = span.trace.trace_context
         return unless tc.capture_stack?
         label_key.set_stack_trace(span.labels, skip_frames: skip_frames)
+      end
+
+      def set_grpc_status_code(labels, status_code)
+        set_label(labels, label_key::RPC_STATUS_CODE, status_code_to_label(status_code))
       end
 
       def get_ua(request)
