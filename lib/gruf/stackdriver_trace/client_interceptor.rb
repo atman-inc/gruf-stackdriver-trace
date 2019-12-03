@@ -2,7 +2,7 @@ require "google/cloud/trace"
 
 module Gruf
   module StackdriverTrace
-    class ClientInterceptor
+    class ClientInterceptor < Gruf::Interceptors::ClientInterceptor
       def call(request_context:)
         Google::Cloud::Trace.in_span("grpc-request") do |span|
           return yield unless span

@@ -4,7 +4,7 @@ require "stackdriver/core/trace_context"
 
 module Gruf
   module StackdriverTrace
-    class ServerInterceptor
+    class ServerInterceptor < Gruf::Interceptors::ServerInterceptor
       def initialize(service: nil, **kwargs)
         load_config(kwargs)
 
