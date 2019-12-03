@@ -1,28 +1,12 @@
-require "google/cloud/env"
-require "google/cloud/trace/async_reporter"
+require 'google/cloud/trace'
 require "stackdriver/core/trace_context"
 
 module Gruf
   module StackdriverTrace
     class ServerInterceptor < Gruf::Interceptors::ServerInterceptor
-      def initialize(service: nil, **kwargs)
-        load_config(kwargs)
-
-        if service
-          @service = service
-        else
-          project_id = configuration.project_id
-
-          if project_id
-            credentials = configuration.credentials
-            tracer = Google::Cloud::Trace.new project_id: project_id,
-                                              credentials: credentials
-            @service = Google::Cloud::Trace::AsyncReporter.new tracer.service
-          end
-        end
-      end
-
       def call
+        return yield if service.nil?
+
         trace = create_trace(request)
         begin
           Google::Cloud::Trace.set(trace)
@@ -41,7 +25,7 @@ module Gruf
       def create_trace(request)
         trace_context = get_trace_context(request)
         Google::Cloud::Trace::TraceRecord.new(
-          @service.project,
+          service.project,
           trace_context,
           span_id_generator: configuration.span_id_generator
         )
@@ -102,9 +86,9 @@ module Gruf
       end
 
       def send_trace(trace)
-        if @service && trace.trace_context.sampled?
+        if trace.trace_context.sampled?
           begin
-            @service.patch_traces(trace)
+            service.patch_traces(trace)
           rescue StandardError => e
             handle_error(e, logger: Gruf.logger)
           end
@@ -158,27 +142,8 @@ module Gruf
         labels[key] = value if value.is_a? ::String
       end
 
-      def load_config(**kwargs)
-        capture_stack = kwargs[:capture_stack]
-        configuration.capture_stack = capture_stack unless capture_stack.nil?
-
-        sampler = kwargs[:sampler]
-        configuration.sampler = sampler unless sampler.nil?
-
-        generator = kwargs[:span_id_generator]
-        configuration.span_id_generator = generator unless generator.nil?
-
-        init_default_config
-      end
-
-      def init_default_config
-        configuration.project_id ||= Trace.default_project_id
-        configuration.credentials ||= Cloud.configure.credentials
-        configuration.capture_stack ||= false
-      end
-
-      def configuration
-        Google::Cloud::Trace.configure
+      def service
+        @service ||= Gruf::StackdriverTrace.service
       end
     end
   end
