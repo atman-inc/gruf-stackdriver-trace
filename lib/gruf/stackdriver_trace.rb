@@ -21,7 +21,7 @@ module Gruf
       @config ||= {
           service: nil,
           sampled: true,
-          capture_stack: nil,
+          capture_stack: true,
           sampler: nil,
           span_id_generator: nil
       }
@@ -45,7 +45,7 @@ module Gruf
     def self.init_default_config
       configuration.project_id ||= Google::Cloud::Trace.default_project_id
       configuration.credentials ||= Google::Cloud.configure.credentials
-      configuration.capture_stack = config.fetch(:capture_stack, false)
+      configuration.capture_stack = config.fetch(:capture_stack, true)
       configuration.sampler = config.fetch(:sampler, nil)
       configuration.span_id_generator = config.fetch(:span_id_generator, nil)
     end
