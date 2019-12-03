@@ -11,7 +11,7 @@ module Gruf
 
       def set_basic_labels(labels, request, method_name)
         set_label(labels, label_key::AGENT, Gruf::StackdriverTrace::AGENT_NAME)
-        set_label(labels, label_key::HTTP_HOST, Socket.gethostname)
+        set_label(labels, label_key::HTTP_HOST, get_host(request))
         set_label(labels, label_key::HTTP_CLIENT_PROTOCOL, 'http2')
         set_label(labels, label_key::HTTP_USER_AGENT, get_ua(request))
         set_label(labels, label_key::HTTP_URL, method_name)
@@ -26,10 +26,17 @@ module Gruf
       end
 
       def get_ua(request)
-        metadata =
-          request.is_a?(Gruf::Outbound::RequestContext) ?
-            request.metadata : request.active_call.metadata
+        metadata = request_context?(request) ? request.metadata : request.active_call.metadata
         metadata['user-agent'] || nil
+      end
+
+      def get_host(request)
+        call = request_context?(request) ? request.call : request.active_call
+        call.peer
+      end
+
+      def request_context?(request)
+        request.is_a?(Gruf::Outbound::RequestContext)
       end
     end
   end
