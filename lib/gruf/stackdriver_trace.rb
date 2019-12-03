@@ -1,3 +1,4 @@
+require 'gruf'
 require_relative "stackdriver_trace/client_interceptor"
 require_relative "stackdriver_trace/server_interceptor"
 require_relative "stackdriver_trace/version"
