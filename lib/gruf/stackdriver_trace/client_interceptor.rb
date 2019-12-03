@@ -11,20 +11,17 @@ module Gruf
           add_response_labels(span.labels, response)
           response
         end
-      rescue => e
-        p e
-        yield request_context
       end
 
       private
 
       def add_request_labels(labels, request_context)
-        set_label(labels, Google::Cloud::Trace::LabelKey::RPC_REQUEST_TYPE, request_context.type)
-        set_label(labels, Google::Cloud::Trace::LabelKey::HTTP_URL, request_context.method)
+        set_label(labels, Google::Cloud::Trace::LabelKey::RPC_REQUEST_TYPE, request_context.type.to_s)
       end
 
       def add_response_labels(labels, response)
-        set_label(labels, Google::Cloud::Trace::LabelKey::HTTP_STATUS_CODE, response.code.to_s)
+        code = response.successful? ? GPRC::Core::StatusCodes::OK : response.code
+        set_label(labels, Google::Cloud::Trace::LabelKey::RPC_STATUS_CODE, code.to_s)
       end
 
       def set_label labels, key, value
