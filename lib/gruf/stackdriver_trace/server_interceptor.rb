@@ -18,7 +18,7 @@ module Gruf
             end
             set_grpc_status_code(
                 span.labels,
-                result.successful? ? ::GRPC::Code::StatusCodes::OK : result.message.code
+                result.successful? ? ::GRPC::Core::StatusCodes::OK : result.message.code
             )
             result.message
           end
