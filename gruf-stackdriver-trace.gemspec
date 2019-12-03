@@ -27,4 +27,5 @@ Gem::Specification.new do |spec|
   spec.add_dependency "stackdriver-core", "~> 1.3"
   spec.add_dependency "google-cloud-env", "~> 1.3"
   spec.add_dependency "google-cloud-trace", "~> 0.35"
+  spec.add_runtime_dependency "activesupport", "> 4"
 end
