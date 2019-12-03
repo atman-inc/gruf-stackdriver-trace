@@ -27,7 +27,7 @@ module Gruf
       end
 
       def configure_span(span, request_context)
-        span.name = "Sent.#{request_context.method_name}"
+        span.name = "Sent.#{request_context.method.to_s}"
         set_stack_trace(span, 4)
         set_basic_labels(span.labels, request_context)
         set_label(span.labels, label_key::RPC_REQUEST_TYPE, request_context.type.to_s)
