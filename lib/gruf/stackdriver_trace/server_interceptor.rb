@@ -54,26 +54,14 @@ module Gruf
       end
 
       def configure_span(span, request)
-        span.name = get_path(request)
+        span.name = "Recv.#{request.method_name}"
+        set_stack_trace(span, 4)
         set_basic_labels(span.labels, request)
-        set_extended_labels(span.labels, span.trace.trace_context.capture_stack?)
+        set_extended_labels(span.labels)
         span
       end
 
-      def set_basic_labels(labels, request)
-        set_label(labels, label_key::AGENT, Gruf::StackdriverTrace::AGENT_NAME)
-        set_label(labels, label_key::HTTP_HOST, Socket.gethostname)
-        set_label(labels, label_key::HTTP_CLIENT_PROTOCOL, 'http2')
-        set_label(labels, label_key::HTTP_USER_AGENT, get_ua(request))
-        set_label(labels, label_key::HTTP_URL, get_path(request))
-        set_label(labels, label_key::PID, ::Process.pid.to_s)
-        set_label(labels, label_key::TID, ::Thread.current.object_id.to_s)
-      end
-
-      def set_extended_labels(labels, capture_stack)
-        if capture_stack
-          label_key.set_stack_trace(labels, skip_frames: 3)
-        end
+      def set_extended_labels(labels)
         if Google::Cloud.env.app_engine?
           set_label(
             labels,
@@ -136,10 +124,6 @@ module Gruf
         path = "#{request.service_key}#{request.method_key}"
         path = "/#{path}" unless path.start_with? "/"
         path
-      end
-
-      def get_ua(request)
-        request.active_call.metadata['user-agent'] || nil
       end
 
       def service
