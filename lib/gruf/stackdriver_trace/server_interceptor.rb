@@ -56,9 +56,13 @@ module Gruf
       end
 
       def configure_span(span, request)
-        span.name = "Recv.#{request.method_name}"
+        method_name = [
+            request.service.name,
+            request.method_key.camelize
+        ].join('/')
+        span.name = "Recv: #{method_name}"
         set_stack_trace(span, 4)
-        set_basic_labels(span.labels, request)
+        set_basic_labels(span.labels, request, method_name)
         set_extended_labels(span.labels)
         span
       end
