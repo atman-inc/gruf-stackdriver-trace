@@ -128,13 +128,15 @@ module Gruf
         # REF: https://github.com/googleapis/google-cloud-ruby/blob/2ad4e22280dc8a2e61613251461e8049129deb4b/google-cloud-trace/lib/google/cloud/trace/time_sampler.rb#L98-L102
         # simulate rack env with Gruf's request for dependencies compatibility(ex. TimeSampler#call)
         # for example
-        #   SCRIPT_NAME => 'grpc.health.v1',
+        #   SCRIPT_NAME => 'grpc.health.v1.Health',
         #   PATH_INFO => '/Check'
-        # be passed 'grpc.health.v1/Check' to blacklist checking
-        {
+        # be passed '/grpc.health.v1.Health/Check' to blacklist checking
+        res = {
           'SCRIPT_NAME' => request.service.service_name,
           'PATH_INFO' => "/#{request.method_key.to_s.camelize}"
         }
+        p res
+        res
       end
 
       def service
