@@ -12,15 +12,15 @@ PATH
 GEM
   remote: https://rubygems.org/
   specs:
-    activesupport (6.0.1)
+    activesupport (6.0.3.1)
       concurrent-ruby (~> 1.0, >= 1.0.2)
       i18n (>= 0.7, < 2)
       minitest (~> 5.1)
       tzinfo (~> 1.1)
-      zeitwerk (~> 2.2)
+      zeitwerk (~> 2.2, >= 2.2.2)
     addressable (2.7.0)
       public_suffix (>= 2.0.2, < 5.0)
-    concurrent-ruby (1.1.5)
+    concurrent-ruby (1.1.6)
     diff-lcs (1.3)
     faraday (0.17.1)
       multipart-post (>= 1.2, < 3)
@@ -65,11 +65,11 @@ GEM
       grpc (~> 1.10)
       grpc-tools (~> 1.10)
       slop (~> 4.6)
-    i18n (1.7.0)
+    i18n (1.8.2)
       concurrent-ruby (~> 1.0)
     jwt (2.2.1)
     memoist (0.16.1)
-    minitest (5.13.0)
+    minitest (5.14.1)
     multi_json (1.14.1)
     multipart-post (2.1.1)
     os (1.0.1)
@@ -98,9 +98,9 @@ GEM
     stackdriver-core (1.4.0)
       google-cloud-core (~> 1.2)
     thread_safe (0.3.6)
-    tzinfo (1.2.5)
+    tzinfo (1.2.7)
       thread_safe (~> 0.1)
-    zeitwerk (2.2.2)
+    zeitwerk (2.3.0)
 
 PLATFORMS
   ruby
