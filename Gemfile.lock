@@ -98,7 +98,7 @@ GEM
     stackdriver-core (1.4.0)
       google-cloud-core (~> 1.2)
     thread_safe (0.3.6)
-    tzinfo (1.2.5)
+    tzinfo (1.2.10)
       thread_safe (~> 0.1)
     zeitwerk (2.2.2)
 
